@@ -1,7 +1,5 @@
 package channels
 
-import "github.com/eapache/queue"
-
 // OverflowingChannel implements the Channel interface in a way that never blocks the writer.
 // Specifically, if a value is written to an OverflowingChannel when its buffer is full
 // (or, in an unbuffered case, when the recipient is not ready) then that value is simply discarded.
@@ -11,7 +9,7 @@ import "github.com/eapache/queue"
 type OverflowingChannel struct {
 	input, output chan interface{}
 	length        chan int
-	buffer        *queue.Queue
+	buffer        *Queue
 	size          BufferCap
 }
 
@@ -28,7 +26,7 @@ func NewOverflowingChannel(size BufferCap) *OverflowingChannel {
 	if size == None {
 		go ch.overflowingDirect()
 	} else {
-		ch.buffer = queue.New()
+		ch.buffer = NewQueue()
 		go ch.overflowingBuffer()
 	}
 	return ch

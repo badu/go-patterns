@@ -1,7 +1,5 @@
 package channels
 
-import "github.com/eapache/queue"
-
 // ResizableChannel implements the Channel interface with a resizable buffer between the input and the output.
 // The channel initially has a buffer size of 1, but can be resized by calling Resize().
 //
@@ -13,7 +11,7 @@ type ResizableChannel struct {
 	length           chan int
 	capacity, resize chan BufferCap
 	size             BufferCap
-	buffer           *queue.Queue
+	buffer           *Queue
 }
 
 func NewResizableChannel() *ResizableChannel {
@@ -24,7 +22,7 @@ func NewResizableChannel() *ResizableChannel {
 		capacity: make(chan BufferCap),
 		resize:   make(chan BufferCap),
 		size:     1,
-		buffer:   queue.New(),
+		buffer:   NewQueue(),
 	}
 	go ch.magicBuffer()
 	return ch

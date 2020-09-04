@@ -1,7 +1,5 @@
 package channels
 
-import "github.com/eapache/queue"
-
 // RingChannel implements the Channel interface in a way that never blocks the writer.
 // Specifically, if a value is written to a RingChannel when its buffer is full then the oldest
 // value in the buffer is discarded to make room (just like a standard ring-buffer).
@@ -11,7 +9,7 @@ import "github.com/eapache/queue"
 type RingChannel struct {
 	input, output chan interface{}
 	length        chan int
-	buffer        *queue.Queue
+	buffer        *Queue
 	size          BufferCap
 }
 
@@ -22,7 +20,7 @@ func NewRingChannel(size BufferCap) *RingChannel {
 	ch := &RingChannel{
 		input:  make(chan interface{}),
 		output: make(chan interface{}),
-		buffer: queue.New(),
+		buffer: NewQueue(),
 		size:   size,
 	}
 	if size == None {

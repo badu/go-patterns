@@ -2,8 +2,6 @@ package channels
 
 import (
 	"reflect"
-
-	"github.com/eapache/queue"
 )
 
 //sharedBufferChannel implements SimpleChannel and is created by the public
@@ -11,7 +9,7 @@ import (
 type sharedBufferChannel struct {
 	in     chan interface{}
 	out    chan interface{}
-	buf    *queue.Queue
+	buf    *Queue
 	closed bool
 }
 
@@ -68,7 +66,7 @@ func (buf *SharedBuffer) NewChannel() SimpleChannel {
 	ch := &sharedBufferChannel{
 		in:  make(chan interface{}),
 		out: make(chan interface{}),
-		buf: queue.New(),
+		buf: NewQueue(),
 	}
 	buf.in <- ch
 	return ch
