@@ -1,0 +1,10 @@
+package docs
+
+// =====================================================================================================================
+// Interpolation search vs Binary search
+// =====================================================================================================================
+// Interpolation search works better than Binary Search for a sorted and uniformly distributed array.
+// On average the interpolation search makes about log(log(n)) comparisons (if the elements are uniformly distributed),
+// where n is the number of elements to be searched
+// In the worst case (for instance where the numerical values of the keys increase exponentially)
+// it can make up to O(n) comparisons.

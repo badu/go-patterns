@@ -1,6 +1,6 @@
 // Package main serves as an example application that makes use of the observer pattern.
 // Playground: https://play.golang.org/p/cr8jEmDmw0
-package main
+package observer
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ type (
 
 	// Observer defines a standard interface for instances that wish to list for
 	// the occurrence of a specific event.
-	Observer interface {
+	AnotherObserver interface {
 		// OnNotify allows an event to be "published" to interface implementations.
 		// In the "real world", error handling would likely be implemented.
 		OnNotify(Event)
@@ -28,10 +28,10 @@ type (
 	Notifier interface {
 		// Register allows an instance to register itself to listen/observe
 		// events.
-		Register(Observer)
+		Register(AnotherObserver)
 		// Deregister allows an instance to remove itself from the collection
 		// of observers/listeners.
-		Deregister(Observer)
+		Deregister(AnotherObserver)
 		// Notify publishes new events to listeners. The method is not
 		// absolutely necessary, as each implementation could define this itself
 		// without losing functionality.
@@ -40,14 +40,14 @@ type (
 )
 
 type (
-	eventObserver struct{
+	eventObserver struct {
 		id int
 	}
 
-	eventNotifier struct{
+	eventNotifier struct {
 		// Using a map with an empty struct allows us to keep the observers
 		// unique while still keeping memory usage relatively low.
-		observers map[Observer]struct{}
+		observers map[AnotherObserver]struct{}
 	}
 )
 
@@ -55,11 +55,11 @@ func (o *eventObserver) OnNotify(e Event) {
 	fmt.Printf("*** Observer %d received: %d\n", o.id, e.Data)
 }
 
-func (o *eventNotifier) Register(l Observer) {
+func (o *eventNotifier) Register(l AnotherObserver) {
 	o.observers[l] = struct{}{}
 }
 
-func (o *eventNotifier) Deregister(l Observer) {
+func (o *eventNotifier) Deregister(l AnotherObserver) {
 	delete(o.observers, l)
 }
 
@@ -72,7 +72,7 @@ func (p *eventNotifier) Notify(e Event) {
 func main() {
 	// Initialize a new Notifier.
 	n := eventNotifier{
-		observers: map[Observer]struct{}{},
+		observers: map[AnotherObserver]struct{}{},
 	}
 
 	// Register a couple of observers.
@@ -84,7 +84,7 @@ func main() {
 	tick := time.NewTicker(time.Second).C
 	for {
 		select {
-		case <- stop:
+		case <-stop:
 			return
 		case t := <-tick:
 			n.Notify(Event{Data: t.UnixNano()})
